@@ -9,8 +9,10 @@ const { isProduction } = require('./config/keys');
 const debug = require('debug');
 
 require('./models/User');
-require('./config/passport'); 
-const passport = require('passport'); // <-- ADD THIS LINE
+require('./models/Tweet'); 
+require('./config/passport');
+
+const passport = require('passport');
 const usersRouter = require('./routes/api/users');
 const tweetsRouter = require('./routes/api/tweets');
 const csrfRouter = require('./routes/api/csrf');
@@ -21,6 +23,7 @@ app.use(logger('dev')); // log request components (URL/method to terminal)
 app.use(express.json()); // parse JSON request body
 app.use(express.urlencoded({ extended: false })); // parse urlencoded request body
 app.use(cookieParser()); // parse cookies as an object on req.cookies
+app.use(passport.initialize());
 
 // ADD THIS SECURITY MIDDLEWARE
 // Security Middleware
@@ -46,7 +49,6 @@ app.use(
 app.use('/api/users', usersRouter);
 app.use('/api/tweets', tweetsRouter);
 app.use('/api/csrf', csrfRouter);
-app.use(passport.initialize());
 
 // Express custom middleware for catching all unmatched requests and formatting
 // a 404 error to be sent as the response.
